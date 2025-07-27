@@ -1,0 +1,1 @@
+journalctl -b -1 --priority=3 > log.txt

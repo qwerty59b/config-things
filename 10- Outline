@@ -1,0 +1,17 @@
+My workaround on Linux, for the time being, is this:
+
+I replaced the contents of ~/.config/autostart/Outline-Client.AppImage.desktop with this:
+
+[Desktop Entry]
+Type=Application
+Version=1.0
+Name=Outline-Client.AppImage (disabled)
+Comment=Outline-Client.AppImage startup script (disabled)
+#Exec=/home/iliazeus/AppImages/Outline-Client.AppImage
+Exec=/bin/true
+StartupNotify=false
+Terminal=false
+
+Then I made it read-only with sudo chmod a-w ~/.config/autostart/Outline-Client.AppImage.desktop
+
+This way, on startup /bin/true is launched instead of Outline, and just exits immediately. And since it's read-only, Outline can't "correct" it to start itself.

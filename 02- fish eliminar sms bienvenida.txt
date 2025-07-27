@@ -1,0 +1,1 @@
+sudo mkdir -p ~/.config/fish && echo 'set -g fish_greeting ""' >> ~/.config/fish/config.fish

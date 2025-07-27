@@ -1,0 +1,14 @@
+sudo pacman -S openssh
+
+sudo systemctl enable sshd
+
+sudo systemctl start sshd
+
+
+sudo apt install openssh-server
+
+sudo systemctl enable ssh
+
+sudo systemctl start ssh
+
+

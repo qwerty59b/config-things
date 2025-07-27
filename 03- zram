@@ -1,0 +1,30 @@
+sudo apt install zram-tools
+
+
+sudo nano /etc/default/zramswap # y cambiar 
+
+ALGO=zstd
+PERCENTAGE=20 # si tienes 8gb de ram o menos valor=50
+PRIORITY=100
+
+Guardar y salir
+
+sudo systemctl restart zramswap
+
+sudo nano /etc/sysctl.d/99-zram-tweaks.conf
+
+vm.swappiness=50
+vm.vfs_cache_pressure=50
+vm.dirty_background_ratio=5
+vm.dirty_ratio=10
+
+Guardar y salir
+
+sudo sysctl --system 
+
+
+cat /proc/swaps  # verificar si esta ok
+
+
+sudo zramctl  # ver el uso
+

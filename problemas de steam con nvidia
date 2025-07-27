@@ -1,0 +1,7 @@
+sudo apt-get purge steam steam-installer steam-launcher
+sudo rm -r .local/share/Steam
+sudo rm -r .steam
+sudo rm -r .steampath
+
+
+evitar esto intalando y iniciando steam antes de los drivers de nvidia

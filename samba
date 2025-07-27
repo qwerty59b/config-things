@@ -1,0 +1,11 @@
+copiar el smb.conf a la carpeta correspondiente
+
+sudo systemctl enable smb.service
+
+sudo systemctl start smb.service
+
+sudo smbpasswd -a qwerty
+
+sudo systemctl status smb.service
+
+darle full permisos a la crpeta donde se montan los discos con sudo chmod 777 /path/to/folder/

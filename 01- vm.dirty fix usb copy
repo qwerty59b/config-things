@@ -1,0 +1,12 @@
+sudo nano /etc/sysctl.d/99.fix-usb-copy.conf   #crear y editar con nano el archivo del fix
+
+
+#contenido del archivo 
+
+vm.dirty_bytes=50331648
+vm.dirty_background_bytes=16777216
+
+
+
+
+#guarda el nano y utiliza el comando sudo sysctl --system para recargar sysctl y listo

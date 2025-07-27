@@ -1,0 +1,5 @@
+debe estar instalado pacman-contrib
+
+
+
+sudo paccache -rk1

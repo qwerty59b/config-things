@@ -1,0 +1,17 @@
+sudo pacman -S zram-generator
+
+printf '[zram0]\nzram-size = ram * 2\ncompression-algorithm = zstd\nswap-priority = 100\nfs-type = swap\n' | sudo tee /etc/systemd/zram-generator.conf
+
+
+
+sudo nano /etc/sysctl.d/99-vm-zram-parameters.conf
+
+vm.swappiness = 180
+vm.watermark_boost_factor = 0
+vm.watermark_scale_factor = 125
+vm.page-cluster = 0 
+
+sudo sysctl --system
+
+
+zramctl  # para ver l estado del swap
