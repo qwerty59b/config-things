@@ -1,6 +1,6 @@
-sudo pacman -Sy archlinux-keyring manjaro-keyring gnome-disk-utility 
+sudo pacman -Sy archlinux-keyring manjaro-keyring gnome-disk-utility zram-generator
 
-sudo pacman -Syu python-pipx openssh samba jre-openjdk krename audacious smplayer mpv handbrake mkvtoolnix-gui mediainfo-gui scrcpy filezilla goverlay steam steam-native-runtime wine-staging wine-mono gamemode qbittorrent unzip zram-generator
+sudo pacman -Syu python-pipx openssh samba jre-openjdk krename audacious smplayer mpv handbrake mkvtoolnix-gui mediainfo-gui scrcpy filezilla steam steam-native-runtime wine-staging wine-mono gamemode qbittorrent unzip 
 
 
 pamac install ventoy-bin waydroid waydroid-script-git
@@ -25,6 +25,7 @@ sudo rm /var/lib/pacman/db.lck
 
 
 #otros
+goverlay 
 fish
 ksnip
 pacman-contrib
