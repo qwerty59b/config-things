@@ -141,7 +141,7 @@ class YTDownloaderApp:
     def __init__(self, root):
         self.root = root
         self.root.title("YT-DLP Advanced Downloader")
-        self.root.geometry("900x900")  # Ventana más grande
+        self.root.geometry("1200x650")  # Ventana más grande
         
         # Aplicar tema oscuro
         DarkTheme.apply(root)
@@ -152,7 +152,8 @@ class YTDownloaderApp:
         self.max_simultaneous = tk.IntVar(value=1)
         self.auto_remove = tk.BooleanVar(value=True)
         self.resolution = tk.StringVar(value="best")
-        self.retry_attempts = tk.IntVar(value=5)  # Nuevo: reintentos por defecto
+        self.retry_attempts = tk.IntVar(value=5)
+        self.concurrent_fragments = tk.IntVar(value=5)  # Nuevo: fragmentos concurrentes
         
         # Estado de las descargas
         self.download_queue = queue.Queue()
@@ -188,18 +189,21 @@ class YTDownloaderApp:
                     self.max_simultaneous.set(config.get("max_simultaneous", 1))
                     self.auto_remove.set(config.get("auto_remove", True))
                     self.resolution.set(config.get("resolution", "best"))
-                    self.retry_attempts.set(config.get("retry_attempts", 5))  # Cargar reintentos
+                    self.retry_attempts.set(config.get("retry_attempts", 5))
+                    self.concurrent_fragments.set(config.get("concurrent_fragments", 5))  # Nuevo
             else:
                 self.ytdlp_path.set(default_ytdlp)
                 self.output_folder.set(str(default_output))
                 self.resolution.set("best")
-                self.retry_attempts.set(5)  # Valor por defecto para reintentos
+                self.retry_attempts.set(5)
+                self.concurrent_fragments.set(5)  # Valor por defecto para fragmentos concurrentes
         except Exception as e:
             print(f"Error loading config: {e}")
             self.ytdlp_path.set(default_ytdlp)
             self.output_folder.set(str(default_output))
             self.resolution.set("best")
             self.retry_attempts.set(5)
+            self.concurrent_fragments.set(5)
         
         # Crear carpeta de descargas si no existe
         os.makedirs(self.output_folder.get(), exist_ok=True)
@@ -211,7 +215,8 @@ class YTDownloaderApp:
             "max_simultaneous": self.max_simultaneous.get(),
             "auto_remove": self.auto_remove.get(),
             "resolution": self.resolution.get(),
-            "retry_attempts": self.retry_attempts.get()  # Guardar reintentos
+            "retry_attempts": self.retry_attempts.get(),
+            "concurrent_fragments": self.concurrent_fragments.get()  # Nuevo
         }
         with open(CONFIG_PATH, "w") as f:
             json.dump(config, f)
@@ -271,6 +276,16 @@ class YTDownloaderApp:
         # Reintentos
         ttk.Label(config_frame, text="Reintentos:").grid(row=2, column=3, sticky="e", padx=(10,5), pady=2)
         ttk.Spinbox(config_frame, from_=0, to=20, textvariable=self.retry_attempts, width=5).grid(row=2, column=4, sticky="w", padx=5, pady=2)
+        
+        # Fragmentos concurrentes (Nuevo)
+        ttk.Label(config_frame, text="Fragmentos Concurrentes:").grid(row=2, column=5, sticky="e", padx=(10,5), pady=2)
+        ttk.Spinbox(
+            config_frame, 
+            from_=1, 
+            to=16, 
+            textvariable=self.concurrent_fragments, 
+            width=5
+        ).grid(row=2, column=6, sticky="w", padx=5, pady=2)
         
         # Resolución
         ttk.Label(config_frame, text="Resolución:").grid(row=3, column=0, sticky="e", padx=5, pady=2)
@@ -565,6 +580,9 @@ class YTDownloaderApp:
             cmd.extend(['-f', 'bestaudio', '-x'])
         elif resolution_choice != "best":
             cmd.extend(['-S', f'res:{resolution_choice},best'])  # Fallback a mejor calidad
+        
+        # Añadir parámetros de fragmentos concurrentes (Nuevo)
+        cmd.extend(['--concurrent-fragments', str(self.concurrent_fragments.get())])
         
         thread = threading.Thread(
             target=self.run_download_with_retries,
