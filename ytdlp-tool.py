@@ -141,7 +141,7 @@ class YTDownloaderApp:
     def __init__(self, root):
         self.root = root
         self.root.title("YT-DLP Advanced Downloader")
-        self.root.geometry("900x650")  # Ventana más grande
+        self.root.geometry("900x900")  # Ventana más grande
         
         # Aplicar tema oscuro
         DarkTheme.apply(root)
