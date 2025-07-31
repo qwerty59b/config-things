@@ -1,3 +1,9 @@
+### Dependencias ###
+# sudo pacman -S python-pip python-requests tk  #Arch
+# sudo apt install python3-tk python3-pip python3-requests # Debian/Ubuntu
+# sudo dnf install python3-tkinter python3-pip python3-requests  # Fedora
+
+
 import sys
 import subprocess
 import importlib.util
