@@ -1,6 +1,6 @@
-sudo pacman -Sy archlinux-keyring gnome-disk-utility zram-generator
+sudo pacman -Sy archlinux-keyring gnome-disk-utility zram-generator fish
 
-sudo pacman -Syu fish python-pipx openssh samba jre-openjdk krename audacious smplayer mpv handbrake mkvtoolnix-gui mediainfo-gui scrcpy filezilla steam steam-native-runtime wine-staging wine-mono gamemode qbittorrent unzip sshfs fastfetch
+sudo pacman -Syu python-pipx openssh samba jre-openjdk krename audacious smplayer mpv handbrake mkvtoolnix-gui mediainfo-gui scrcpy filezilla steam steam-native-runtime wine-staging wine-mono gamemode qbittorrent unzip sshfs fastfetch
 
 
 yay -S ventoy-bin snapper-support btrfs-assistant
