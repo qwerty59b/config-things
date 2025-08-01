@@ -11,7 +11,7 @@ git clone https://github.com/dfaust/plasma-applet-netspeed-widget && cd plasma-a
 
 pipx install git+https://github.com/atscub/nautapy.git
 
-bash && bash <(curl -fsSL https://raw.githubusercontent.com/amir1376/ab-download-manager/master/scripts/install.sh)
+bash <(curl -fsSL https://raw.githubusercontent.com/amir1376/ab-download-manager/master/scripts/install.sh)
 
 
 
