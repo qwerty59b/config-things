@@ -121,8 +121,34 @@ class YTDownloaderApp:
         # Configurar cierre
         self.root.protocol("WM_DELETE_WINDOW", self.on_close)
         
+        # Configurar atajos de teclado
+        self.setup_keyboard_shortcuts()
+        
         # Verificar actualización cada 7 días
         self.check_update_periodically()
+    
+    def setup_keyboard_shortcuts(self):
+        # Seleccionar todo
+        self.root.bind("<Control-a>", self.select_all)
+        self.root.bind("<Control-A>", self.select_all)
+        
+        # Agregar a cola
+        self.root.bind("<Control-n>", lambda e: self.add_to_queue())
+        
+        # Iniciar descargas
+        self.root.bind("<Control-d>", lambda e: self.start_downloads())
+        
+        # Eliminar seleccionados
+        self.root.bind("<Delete>", lambda e: self.remove_download())
+        
+        # Limpiar completados
+        self.root.bind("<Control-l>", lambda e: self.clear_completed())
+    
+    def select_all(self, event=None):
+        """Selecciona todos los elementos en la cola de descargas"""
+        items = self.dl_tree.get_children()
+        self.dl_tree.selection_set(items)
+        self.status_var.set(f"{len(items)} elementos seleccionados")
     
     def load_config(self):
         default_output = Path.home() / "Downloads"
@@ -191,13 +217,15 @@ class YTDownloaderApp:
     def save_queue(self):
         queue_data = []
         for item in self.dl_tree.get_children():
-            url, custom_name, resolution, status = self.dl_tree.item(item, "values")
-            queue_data.append({
-                "url": url,
-                "custom_name": custom_name,
-                "resolution": resolution,
-                "status": status
-            })
+            values = self.dl_tree.item(item, "values")
+            if values and len(values) >= 4:
+                url, custom_name, resolution, status = values
+                queue_data.append({
+                    "url": url,
+                    "custom_name": custom_name,
+                    "resolution": resolution,
+                    "status": status
+                })
         
         with open(QUEUE_PATH, "w") as f:
             json.dump(queue_data, f)
@@ -309,9 +337,24 @@ class YTDownloaderApp:
         self.dl_tree.pack(side="left", fill="both", expand=True)
         scrollbar.pack(side="right", fill="y")
         
+        # Frame para botones de movimiento
+        move_frame = ttk.Frame(dl_frame)
+        move_frame.pack(side="right", fill="y", padx=5)
+        
+        # Botones de movimiento
+        ttk.Button(move_frame, text="▲ Subir", command=self.move_up).pack(fill="x", pady=2)
+        ttk.Button(move_frame, text="▼ Bajar", command=self.move_down).pack(fill="x", pady=2)
+        ttk.Button(move_frame, text="⏫ Inicio", command=self.move_to_top).pack(fill="x", pady=2)
+        ttk.Button(move_frame, text="⏬ Final", command=self.move_to_bottom).pack(fill="x", pady=2)
+        
         # Menú contextual
         self.context_menu = tk.Menu(self.root, tearoff=0)
         self.context_menu.add_command(label="Cambiar URL", command=self.change_url)
+        self.context_menu.add_command(label="Mover arriba", command=self.move_up)
+        self.context_menu.add_command(label="Mover abajo", command=self.move_down)
+        self.context_menu.add_command(label="Mover al inicio", command=self.move_to_top)
+        self.context_menu.add_command(label="Mover al final", command=self.move_to_bottom)
+        self.context_menu.add_separator()
         self.context_menu.add_command(label="Eliminar", command=self.remove_download)
         self.dl_tree.bind("<Button-3>", self.show_context_menu)
         
@@ -322,6 +365,7 @@ class YTDownloaderApp:
         ttk.Button(btn_frame, text="Iniciar Descargas", command=self.start_downloads).pack(side="left", padx=5)
         ttk.Button(btn_frame, text="Eliminar", command=self.remove_download).pack(side="left", padx=5)
         ttk.Button(btn_frame, text="Limpiar Completadas", command=self.clear_completed).pack(side="left", padx=5)
+        ttk.Button(btn_frame, text="Seleccionar todo", command=self.select_all).pack(side="left", padx=5)
         
         # Status bar con fuente en negrita
         self.status_var = tk.StringVar(value="Listo")
@@ -333,6 +377,57 @@ class YTDownloaderApp:
             style='Bold.TLabel'
         )
         status_bar.pack(side="bottom", fill="x")
+    
+    def move_item(self, item, new_index):
+        """Mueve un elemento a una nueva posición en el Treeview"""
+        values = self.dl_tree.item(item, "values")
+        self.dl_tree.delete(item)
+        self.dl_tree.insert("", new_index, values=values)
+    
+    def move_up(self):
+        """Mueve el elemento seleccionado una posición arriba"""
+        selected = self.dl_tree.selection()
+        if not selected:
+            return
+            
+        item = selected[0]
+        current_index = self.dl_tree.index(item)
+        if current_index > 0:
+            self.move_item(item, current_index - 1)
+            self.status_var.set("Elemento movido hacia arriba")
+    
+    def move_down(self):
+        """Mueve el elemento seleccionado una posición abajo"""
+        selected = self.dl_tree.selection()
+        if not selected:
+            return
+            
+        item = selected[0]
+        current_index = self.dl_tree.index(item)
+        total_items = len(self.dl_tree.get_children())
+        if current_index < total_items - 1:
+            self.move_item(item, current_index + 1)
+            self.status_var.set("Elemento movido hacia abajo")
+    
+    def move_to_top(self):
+        """Mueve el elemento seleccionado al inicio de la lista"""
+        selected = self.dl_tree.selection()
+        if not selected:
+            return
+            
+        item = selected[0]
+        self.move_item(item, 0)
+        self.status_var.set("Elemento movido al inicio")
+    
+    def move_to_bottom(self):
+        """Mueve el elemento seleccionado al final de la lista"""
+        selected = self.dl_tree.selection()
+        if not selected:
+            return
+            
+        item = selected[0]
+        self.move_item(item, "end")
+        self.status_var.set("Elemento movido al final")
     
     def show_usage_guide(self):
         """Muestra una ventana con la guía de uso"""
@@ -393,6 +488,10 @@ class YTDownloaderApp:
             ("   - Click derecho en un item para cambiar URL o eliminarlo.",
              11, False),
             ("   - 'Limpiar Completadas' elimina los items completados de la lista.",
+             11, False),
+            ("   - Usa los botones de movimiento para reorganizar la cola.",
+             11, False),
+            ("   - Atajos de teclado: Ctrl+A (seleccionar todo), Ctrl+D (iniciar descargas), Delete (eliminar)",
              11, False),
             ("", 1, False),
             ("Configuraciones avanzadas", 14, True),
@@ -460,10 +559,11 @@ class YTDownloaderApp:
     def check_ytdlp_update(self):
         """Verifica si hay una nueva versión de yt-dlp disponible"""
         try:
-            self.status_var.set("Verificando actualizaciones...")
+            self.root.after(0, self.status_var.set, "Verificando actualizaciones...")
             ytdlp_path = self.ytdlp_path.get()
             
             if not os.path.exists(ytdlp_path):
+                self.root.after(0, self.status_var.set, "yt-dlp no encontrado")
                 return
                 
             # Obtener versión local
@@ -474,11 +574,16 @@ class YTDownloaderApp:
             ).strip()
             
             # Obtener última versión disponible
-            latest_version = subprocess.check_output(
-                [ytdlp_path, "-U", "--get-only"],
-                stderr=subprocess.STDOUT,
-                text=True
-            ).strip()
+            try:
+                latest_version = subprocess.check_output(
+                    [ytdlp_path, "-U", "--get-only"],
+                    stderr=subprocess.STDOUT,
+                    text=True
+                ).strip()
+            except subprocess.CalledProcessError:
+                # Usar versión local como fallback
+                latest_version = local_version
+                self.root.after(0, self.status_var.set, "Error al verificar actualización")
             
             # Comparar versiones
             if local_version != latest_version:
@@ -494,6 +599,7 @@ class YTDownloaderApp:
             
         except Exception as e:
             print(f"Error checking update: {e}")
+            self.root.after(0, self.status_var.set, f"Error: {str(e)}")
         finally:
             self.root.after(0, self.status_var.set, "Listo")
     
@@ -579,7 +685,7 @@ class YTDownloaderApp:
     def run_update_command(self, cmd):
         """Ejecuta el comando de actualización y muestra el resultado"""
         try:
-            self.status_var.set("Actualizando yt-dlp...")
+            self.root.after(0, self.status_var.set, "Actualizando yt-dlp...")
             
             # Preparar el proceso
             sistema = platform.system()
@@ -685,7 +791,14 @@ class YTDownloaderApp:
             return
             
         item = selected[0]
-        current_url, custom_name, resolution, status = self.dl_tree.item(item, "values")
+        values = self.dl_tree.item(item, "values")
+        if not values or len(values) < 4:
+            return
+            
+        current_url = values[0]
+        custom_name = values[1]
+        resolution = values[2]
+        status = values[3]
         
         new_url = simpledialog.askstring(
             "Cambiar URL", 
@@ -704,8 +817,8 @@ class YTDownloaderApp:
             
         # Agregar solo elementos en cola
         for item in self.dl_tree.get_children():
-            status = self.dl_tree.item(item, "values")[3]
-            if status == "En cola":
+            values = self.dl_tree.item(item, "values")
+            if values and len(values) >= 4 and values[3] == "En cola":
                 self.download_queue.put(item)
         
         self.launch_downloaders()
@@ -719,7 +832,15 @@ class YTDownloaderApp:
                 self.start_single_download(item)
     
     def start_single_download(self, item):
-        url, custom_name, resolution, _ = self.dl_tree.item(item, "values")
+        # Verificar si el elemento aún existe
+        if not self.dl_tree.exists(item):
+            return
+            
+        values = self.dl_tree.item(item, "values")
+        if not values or len(values) < 4:
+            return
+            
+        url, custom_name, resolution, _ = values
         self.dl_tree.item(item, values=(url, custom_name, resolution, "Descargando"))
         
         output_path = self.output_folder.get()
@@ -844,7 +965,15 @@ class YTDownloaderApp:
             self.root.after(0, self.status_var.set, message)
     
     def complete_download(self, item, returncode):
-        url, custom_name, resolution, _ = self.dl_tree.item(item, "values")
+        # Verificar si el elemento aún existe
+        if not self.dl_tree.exists(item):
+            return
+            
+        values = self.dl_tree.item(item, "values")
+        if not values or len(values) < 4:
+            return
+            
+        url, custom_name, resolution, _ = values
         
         if returncode == 0:
             status = "Completado"
@@ -873,36 +1002,58 @@ class YTDownloaderApp:
         if not selected:
             return
             
-        item = selected[0]
-        status = self.dl_tree.item(item, "values")[3]
-        
-        # Si está descargando, detener el proceso
-        if status == "Descargando" and item in self.active_downloads:
-            _, process = self.active_downloads[item]
-            if process:
-                process.terminate()
-            del self.active_downloads[item]
-        
-        self.dl_tree.delete(item)
+        # Eliminar todos los elementos seleccionados
+        for item in selected:
+            # Verificar si el elemento existe antes de intentar acceder
+            if not self.dl_tree.exists(item):
+                continue
+                
+            values = self.dl_tree.item(item, "values")
+            if values and len(values) >= 4:
+                status = values[3]
+                
+                # Si está descargando, detener el proceso
+                if status == "Descargando" and item in self.active_downloads:
+                    _, process = self.active_downloads[item]
+                    if process:
+                        try:
+                            process.terminate()
+                        except:
+                            pass
+                    del self.active_downloads[item]
+            
+            self.dl_tree.delete(item)
     
     def clear_completed(self):
         for item in self.dl_tree.get_children():
-            status = self.dl_tree.item(item, "values")[3]
-            if status == "Completado":
+            # Verificar si el elemento existe
+            if not self.dl_tree.exists(item):
+                continue
+                
+            values = self.dl_tree.item(item, "values")
+            if values and len(values) >= 4 and values[3] == "Completado":
                 self.dl_tree.delete(item)
     
     def on_close(self):
         # Cambiar estado de descargas activas a "En cola"
         for item, (_, process) in list(self.active_downloads.items()):
+            # Verificar si el elemento existe
+            if not self.dl_tree.exists(item):
+                continue
+                
             # Detener proceso si existe
             if process:
                 try:
                     process.terminate()
                 except:
                     pass
+            
             # Actualizar estado en la lista
-            url, custom_name, resolution, _ = self.dl_tree.item(item, "values")
-            self.dl_tree.item(item, values=(url, custom_name, resolution, "En cola"))
+            values = self.dl_tree.item(item, "values")
+            if values and len(values) >= 4:
+                url, custom_name, resolution, _ = values
+                # Cambiar estado a "En cola" para continuar después
+                self.dl_tree.item(item, values=(url, custom_name, resolution, "En cola"))
         
         # Limpiar lista de descargas activas
         self.active_downloads.clear()
