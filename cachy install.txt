@@ -1,0 +1,42 @@
+
+
+sudo pacman -Syu python-pipx openssh samba jre-openjdk krename audacious smplayer handbrake mkvtoolnix-gui mediainfo-gui sshfs virtualbox gnome-disk-utility cachyos-gaming-meta wine-mono ntfs-3g
+
+
+
+wget -q https://raw.githubusercontent.com/ivan-hc/AM/main/AM-INSTALLER && chmod a+x ./AM-INSTALLER && ./AM-INSTALLER
+
+git clone https://github.com/dfaust/plasma-applet-netspeed-widget && cd plasma-applet-netspeed-widget && ./install.sh
+
+bash <(curl -fsSL https://raw.githubusercontent.com/amir1376/ab-download-manager/master/scripts/install.sh)
+
+pipx install git+https://github.com/atscub/nautapy.git
+
+paru -S ventoy-bin
+
+
+
+
+
+
+
+#######Fixes#######
+sudo rm -R /var/lib/pacman/sync
+sudo rm /var/lib/pacman/db.lck
+
+
+
+#otros
+mpv
+fish
+scrcpy
+filezilla
+qbittorrent
+unzip
+goverlay 
+ksnip
+pacman-contrib
+unzip
+qdiskinfo aur
+media-downloader aur
+
