@@ -1,0 +1,36 @@
+sudo apt install fish pipx samba openssh-server python3-full default-jre krename audacious smplayer mpv ffmpeg handbrake mkvtoolnix-gui mediainfo-gui steam-installer winetricks gamemode vulkan-tools qbittorrent zram-tools numlockx
+
+sudo apt install make git && git clone https://github.com/wmutschl/timeshift-autosnap-apt.git /home/$USER/timeshift-autosnap-apt && cd /home/$USER/timeshift-autosnap-apt && sudo make install && git clone https://github.com/Antynea/grub-btrfs.git /home/$USER/grub-btrfs && cd /home/$USER/grub-btrfs && sudo make install
+
+bash <(curl -fsSL https://raw.githubusercontent.com/amir1376/ab-download-manager/master/scripts/install.sh)
+
+wget -q https://raw.githubusercontent.com/ivan-hc/AM/main/AM-INSTALLER && chmod a+x ./AM-INSTALLER && ./AM-INSTALLER
+
+pipx install git+https://github.com/atscub/nautapy.git
+
+
+
+
+##wine ppa##
+
+sudo dpkg --add-architecture i386
+
+sudo mkdir -pm755 /etc/apt/keyrings
+wget -O - https://dl.winehq.org/wine-builds/winehq.key | sudo gpg --dearmor -o /etc/apt/keyrings/winehq-archive.key -
+
+sudo wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/ubuntu/dists/noble/winehq-noble.sources
+
+sudo apt update && sudo apt install --install-recommends winehq-staging
+
+
+
+
+
+
+###other things###
+calibre
+ 
+
+
+
+
