@@ -1,1 +1,4 @@
+sudo vboxreload
+
+
 sudo usermod -aG vboxusers taku
