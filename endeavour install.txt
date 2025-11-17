@@ -1,7 +1,6 @@
 sudo pacman -Syy archlinux-keyring gnome-disk-utility zram-generator fish
 
-sudo pacman -Syu python-pipx openssh samba jre-openjdk krename audacious smplayer handbrake mkvtoolnix-gui mediainfo-gui steam steam-native-runtime wine-staging wine-mono winetricks gamemode vulkan-tools sshfs fastfetch virtualbox
-
+sudo pacman -Syu openssh samba jre-openjdk krename audacious smplayer handbrake mkvtoolnix-gui mediainfo-gui steam wine-staging wine-mono winetricks gamemode vulkan-tools sshfs fastfetch telegram-desktop
 
 
 
@@ -9,9 +8,11 @@ git clone https://github.com/dfaust/plasma-applet-netspeed-widget && cd plasma-a
 
 bash <(curl -fsSL https://raw.githubusercontent.com/amir1376/ab-download-manager/master/scripts/install.sh)
 
-pipx install git+https://github.com/atscub/nautapy.git
+yay -S ventoy-bin snapper-support btrfs-assistant gearlever
 
-yay -S ventoy-bin snapper-support btrfs-assistant appimagelauncher
+#pipx install git+https://github.com/atscub/nautapy.git
+
+
 
 
 
@@ -26,6 +27,7 @@ sudo rm /var/lib/pacman/db.lck
 
 
 #otros
+python-pipx 
 mpv
 fish
 scrcpy
@@ -38,4 +40,10 @@ pacman-contrib
 unzip
 qdiskinfo aur
 media-downloader aur
+docker 
+docker-compose 
+freerdp
+
+
+#wget -q https://raw.githubusercontent.com/ivan-hc/AM/main/AM-INSTALLER && chmod a+x ./AM-INSTALLER && ./AM-INSTALLER
 
