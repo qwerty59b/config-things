@@ -1,5 +1,7 @@
 sudo pacman -S zram-generator
 
+sudo apt install systemd-zram-generator
+
 printf '[zram0]\nzram-size = ram * 2\ncompression-algorithm = zstd\nswap-priority = 100\nfs-type = swap\n' | sudo tee /etc/systemd/zram-generator.conf
 
 
