@@ -1,17 +1,17 @@
-sudo pacman -Sy archlinux-keyring manjaro-keyring gnome-disk-utility zram-generator
+sudo pacman -Rs plasma-browser-integration
 
-sudo pacman -Syu python-pipx openssh samba jre-openjdk krename audacious smplayer mpv handbrake mkvtoolnix-gui mediainfo-gui scrcpy filezilla steam steam-native-runtime wine-staging wine-mono gamemode qbittorrent unzip 
+sudo pacman -Sy archlinux-keyring manjaro-keyring zram-generator gnome-disk-utility telegram-desktop
+
+sudo pacman -Syu openssh samba jre-openjdk krename audacious smplayer mpv mkvtoolnix-gui steam steam-native-runtime wine-staging wine-mono gamemode winetricks ventoy gearlever handbrake mediainfo-gui
 
 
-pamac install ventoy-bin waydroid waydroid-script-git
-
-wget -q https://raw.githubusercontent.com/ivan-hc/AM/main/AM-INSTALLER && chmod a+x ./AM-INSTALLER && ./AM-INSTALLER
+pamac install yay-bin
 
 git clone https://github.com/dfaust/plasma-applet-netspeed-widget && cd plasma-applet-netspeed-widget && ./install.sh
 
-pipx install git+https://github.com/atscub/nautapy.git
-
 bash <(curl -fsSL https://raw.githubusercontent.com/amir1376/ab-download-manager/master/scripts/install.sh)
+
+#pipx install git+https://github.com/atscub/nautapy.git
 
 
 
@@ -25,11 +25,18 @@ sudo rm /var/lib/pacman/db.lck
 
 
 #otros
-goverlay 
+python-pipx
+sshfs
 fish
+scrcpy
+filezilla
+qbittorrent
+unzip
+goverlay 
 ksnip
 pacman-contrib
 unzip
 qdiskinfo aur
 media-downloader aur
 
+wget -q https://raw.githubusercontent.com/ivan-hc/AM/main/AM-INSTALLER && chmod a+x ./AM-INSTALLER && ./AM-INSTALLER
