@@ -1,6 +1,6 @@
-sudo pacman -Syy archlinux-keyring base-devel gnome-disk-utility zram-generator fish
+sudo pacman -Syy archlinux-keyring
 
-sudo pacman -Syu openssh samba jre-openjdk krename audacious smplayer handbrake mkvtoolnix-gui mediainfo-gui steam wine-staging wine-mono winetricks gamemode vulkan-tools sshfs fastfetch btrfs-assistant telegram-desktop
+sudo pacman -Syu openssh samba jre-openjdk krename audacious smplayer handbrake mkvtoolnix-gui mediainfo-gui sshfs fastfetch scrcpy btrfs-assistant telegram-desktop base-devel gnome-disk-utility zram-generator fish steam wine-staging wine-mono winetricks gamemode vulkan-tools flatpak
 
 
 
@@ -8,14 +8,15 @@ git clone https://github.com/dfaust/plasma-applet-netspeed-widget && cd plasma-a
 
 bash <(curl -fsSL https://raw.githubusercontent.com/amir1376/ab-download-manager/master/scripts/install.sh)
 
-yay -S ventoy-bin gearlever
+yay -S ventoy-bin heroic-games-launcher-bin
 
 yay -G snapper-support
 
-#pipx install git+https://github.com/atscub/nautapy.git
+pipx install git+https://github.com/atscub/nautapy.git
 
+sudo pacman -Rs firewalld plasma-browser-integration
 
-
+flatpak install flathub it.mijorus.gearlever
 
 
 
