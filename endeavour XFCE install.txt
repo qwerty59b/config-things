@@ -1,0 +1,51 @@
+sudo pacman -Syy archlinux-keyring
+
+sudo pacman -Syu openssh samba jre-openjdk krename audacious smplayer handbrake mkvtoolnix-gui mediainfo-gui sshfs fastfetch scrcpy btrfs-assistant telegram-desktop base-devel gnome-disk-utility zram-generator fish steam wine-staging wine-mono winetricks gamemode vulkan-tools flatpak btop ntfs-3g
+
+
+
+
+bash <(curl -fsSL https://raw.githubusercontent.com/amir1376/ab-download-manager/master/scripts/install.sh)
+
+yay -S ventoy-bin heroic-games-launcher-bin
+
+yay -G snapper-support ##despues en la carpeta de salida##  makepkg -s ##y despues## sudo pacman -U *.tar.zst
+
+pipx install git+https://github.com/atscub/nautapy.git
+
+sudo pacman -Rs firewalld
+
+flatpak install flathub it.mijorus.gearlever
+
+
+
+
+
+
+#######Fixes#######
+sudo rm -R /var/lib/pacman/sync
+sudo rm /var/lib/pacman/db.lck
+
+
+
+#otros
+python-pipx 
+mpv
+fish
+scrcpy
+filezilla
+qbittorrent
+unzip
+goverlay 
+ksnip
+pacman-contrib
+unzip
+qdiskinfo aur
+media-downloader aur
+docker 
+docker-compose 
+freerdp
+
+
+#wget -q https://raw.githubusercontent.com/ivan-hc/AM/main/AM-INSTALLER && chmod a+x ./AM-INSTALLER && ./AM-INSTALLER
+
